@@ -47,8 +47,6 @@ class CardPile():
 
     def randomCut(self,playerNumber):
         firstHalf = random.randint(playerNumber*CARD_GRID_HEIGHT*CARD_GRID_WIDTH+1,len(self.firstPile))
-        print("cut position: " +str(firstHalf))
-        print("Randomcut not done: " + str(len(self.secondPile)) + " " + str(len(self.firstPile)))
         self.secondPile = self.firstPile[:firstHalf]
         self.firstPile = self.firstPile[firstHalf:]
         print("Randomcut done: " + str(len(self.secondPile)) + " " + str(len(self.firstPile)))
@@ -60,6 +58,9 @@ class CardPile():
     def outCard(self):
         self.secondPile.append(self.firstPile.pop())
         self.secondPile[-1].isVisible = True 
+
+    def getSize(self):
+        return [len(self.firstPile)+len(self.secondPile),len(self.firstPile),len(self.secondPile)]
 
 class CardGrid():
     def __init__(self):
@@ -82,6 +83,9 @@ class CardGrid():
     def setCard(self,card,lineIndex,cardIndex):
         self.grid[lineIndex][cardIndex] = card
 
+    def getTotalCard(self):
+        return len(self.grid)*len(self.grid[0])
+
 class Player():
     def __init__(self,name):
         self.name = name
@@ -98,6 +102,9 @@ class Player():
             if find == True:
                 break
 
+    def getCards(self):
+        return self.cards
+
 class Game():
     def __init__(self,playerList):
         self.playerList = playerList
@@ -109,9 +116,15 @@ class Game():
         self.gameCardPile.remakePile()
         self.gameCardPile.outCard()
 
+    def getCardPile(self):
+        return self.gameCardPile
+
 def main():
     players = [Player('Joe'),Player('Danie'),Player('Mark')]
     game = Game(players)
+    for player in game.playerList:
+        print(player.name+" "+str(player.getCards().getTotalCard()))
+    print(game.getCardPile().getSize())
 
 if __name__ == "__main__":
     main()
