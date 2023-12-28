@@ -7,9 +7,9 @@ At this time the game is not finished and the way to write strategy is not set s
 
 ## Linux
 You need python 3<br/>
-If you don't have python installed<br/>
+If you don't have python installed &rarr;
 ```sudo apt-get install python3```<br/>
-After that you can clone the repo<br/>
+After that you can clone the repo &rarr;
 ```git clone https://github.com/Alexander7474/skydjo-startegy-study.git```<br/>
 And its done!!<br/>
 
