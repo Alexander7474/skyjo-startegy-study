@@ -1,9 +1,13 @@
 import random
 from typing import List
 from humanStrat import *
+import os
 
 CARD_GRID_WIDTH = 4
 CARD_GRID_HEIGHT = 3
+
+def clearView():
+    os.system('clear')
 
 class Card():
     def __init__(self,value):
@@ -98,13 +102,20 @@ class CardGrid():
     def getTotalCard(self) -> int:
         return len(self.grid)*len(self.grid[0])
     
-    def isTwoCardVisible(self):
+    def amountVisibleCard(self):
         visibleCounter = 0
         for l in self.grid:
             for c in l:
                 if c.isItVisible(): visibleCounter+=1
-        return visibleCounter > 1
-
+        return visibleCounter
+    
+    def isAllCardVisible(self):
+        notVisibleCounter = 0
+        for l in self.grid:
+            for c in l:
+                if not c.isItVisible(): notVisibleCounter+=1
+        return notVisibleCounter == 0
+    
 class Player():
     def __init__(self,name: str):
         self.name = name
@@ -166,9 +177,11 @@ class Game():
             for player in self.playerList:
                 inGame = player.play(self)
                 if inGame == False: break
+        stat  = {}
+        print('Game finished')
 
 def main():
-    players = [Human("joe")]
+    players = [Human("Bob"),Human("Alice")]
     game = Game(players)
     game.gamePlay()
 
