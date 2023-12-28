@@ -1,23 +1,22 @@
 import random
+from typing import List
 from humanStrat import *
 
 CARD_GRID_WIDTH = 4
 CARD_GRID_HEIGHT = 3
-
-CARD_GRID_HEIGHT
 
 class Card():
     def __init__(self,value):
         self.isVisible = False
         self.value = value
 
-    def getValue(self):
+    def getValue(self) -> int:
         return self.value
     
-    def isItVisible(self):
+    def isItVisible(self) -> bool:
         return self.isVisible
     
-    def setVisibility(self,b):
+    def setVisibility(self,b: bool):
         self.isVisible = b
 
 class CardPile():
@@ -34,7 +33,7 @@ class CardPile():
     def shuffle(self):
         for i in range(5): random.shuffle(self.firstPile)
 
-    def pickLastCard(self):
+    def pickLastCard(self) -> Card:
         if (len(self.firstPile) < 1):
             cardSave = self.secondPile.pop()
             self.secondPile.reverse()
@@ -45,21 +44,24 @@ class CardPile():
 
         return self.firstPile.pop()
     
-    def pickLastCardFromSecond(self):
+    def pickLastCardFromSecond(self) -> Card:
         if len(self.secondPile) == 0: 
             print("FATAL ERROR: try to take card from secondPile but secondPile was clear")
             exit()
         return self.secondPile.pop()
     
-    def addCard(self,card):
-        card.isVisible = True
+    def showLastCardFromSecond(self) -> Card:
+        return self.secondPile[-1]
+    
+    def addCard(self,card: Card):
+        card.setVisibility(True)
         self.secondPile.append(card)
 
-    def randomCut(self,playerNumber):
+    def randomCut(self,playerNumber: list):
         firstHalf = random.randint(playerNumber*CARD_GRID_HEIGHT*CARD_GRID_WIDTH+1,len(self.firstPile))
         self.secondPile = self.firstPile[:firstHalf]
         self.firstPile = self.firstPile[firstHalf:]
-        print("Randomcut done: " + str(len(self.secondPile)) + " " + str(len(self.firstPile)))
+        #print("Randomcut done: " + str(len(self.secondPile)) + " " + str(len(self.firstPile)))
 
     def remakePile(self):
         self.firstPile = self.firstPile + self.secondPile
@@ -67,37 +69,44 @@ class CardPile():
 
     def outCard(self):
         self.secondPile.append(self.firstPile.pop())
-        self.secondPile[-1].isVisible = True 
+        self.secondPile[-1].setVisibility(True)
 
-    def getSize(self):
+    def getSize(self) -> list:
         return [len(self.firstPile)+len(self.secondPile),len(self.firstPile),len(self.secondPile)]
 
 class CardGrid():
     def __init__(self):
-        self.grid = []
+        self.grid: List[List] = []
         for i in range(CARD_GRID_HEIGHT):
-            line = []
+            line: List[Card] = []
             for j in range(CARD_GRID_WIDTH):
                 line.append(None)
             self.grid.append(line)
 
-    def getGrid(self):
+    def getGrid(self) -> list:
         return self.grid
     
-    def getLine(self,index):
+    def getLine(self,index: int) -> list:
         return self.grid[index]
     
-    def getCard(self,lineIndex,cardIndex):
+    def getCard(self,lineIndex: int,cardIndex: int) -> Card:
         return self.grid[lineIndex][cardIndex]
     
     def setCard(self,card,lineIndex,cardIndex):
         self.grid[lineIndex][cardIndex] = card
 
-    def getTotalCard(self):
+    def getTotalCard(self) -> int:
         return len(self.grid)*len(self.grid[0])
+    
+    def isTwoCardVisible(self):
+        visibleCounter = 0
+        for l in self.grid:
+            for c in l:
+                if c.isItVisible(): visibleCounter+=1
+        return visibleCounter > 1
 
 class Player():
-    def __init__(self,name):
+    def __init__(self,name: str):
         self.name = name
         self.cards = CardGrid()
 
@@ -120,18 +129,21 @@ class Player():
         for l in range(len(self.getCards().getGrid())):
             line = "|"
             for c in range(len(self.getCards().getLine(l))):
-                value = str(self.getCards().getCard(l,c).getValue())
-                if len(value) == 2:
-                    line += " "+value+" "
+                if (self.getCards().getCard(l,c).isItVisible()):
+                    value = str(self.getCards().getCard(l,c).getValue())
+                    if len(value) == 2:
+                        line += " "+value+" "
+                    else:
+                        line += "  "+value+" "
                 else:
-                    line += "  "+value+" "
+                    line += " ** "
             line += "|"
             gridShow += "\n"+line
         gridShow += "\n"+(CARD_GRID_WIDTH*4*"-")+"--"
         print(gridShow)
 
 class Game():
-    def __init__(self,playerList):
+    def __init__(self,playerList: list[Player]):
         self.playerList = playerList
         self.gameCardPile = CardPile()
         self.gameCardPile.shuffle()
@@ -148,15 +160,17 @@ class Game():
     def getPlayerList(self):
         return self.playerList
     
-    def gameLap(self):
-        for player in self.playerList:
-            player.play()
+    def gamePlay(self):
+        inGame = True
+        while inGame:
+            for player in self.playerList:
+                inGame = player.play(self)
+                if inGame == False: break
 
 def main():
     players = [Human("joe")]
     game = Game(players)
-    game.gameLap()
-    
+    game.gamePlay()
 
 if __name__ == "__main__":
     main()
