@@ -18,8 +18,8 @@ class Human(Player):
             print("Second card")
             x2 = int(input('x: '))
             y2 = int(input('y: '))
-            self.cards.getCard(x1-1,y1-1).setVisibility(True)
-            self.cards.getCard(x2-1,y2-1).setVisibility(True)
+            self.cards.getCard(y1-1,x1-1).setVisibility(True)
+            self.cards.getCard(y2-1,x2-1).setVisibility(True)
             return True
         else:
             print('Last visible card pile: ' + str(game.getCardPile().showLastCardFromSecond().getValue()))
