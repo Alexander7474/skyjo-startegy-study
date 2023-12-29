@@ -100,9 +100,20 @@ class CardGrid():
         self.grid[lineIndex][cardIndex] = card
 
     def getTotalCard(self) -> int:
+        """Return the total number of card
+        Return
+        ------
+            total
+        """
         return len(self.grid)*len(self.grid[0])
     
     def amountVisibleCard(self) -> int:
+        """Return the amount of card visible in player grid
+        Return
+        ------
+        visibleCounter: int
+            the count of visible card in player grid
+        """
         visibleCounter = 0
         for l in self.grid:
             for c in l:
@@ -110,6 +121,12 @@ class CardGrid():
         return visibleCounter
     
     def amountNotVisibleCard(self):
+        """Return the amount of card not visible in player grid
+        Return
+        ------
+        notVisibleCounter: int
+            the count of not visible card in player grid
+        """
         notVisibleCounter = 0
         for l in self.grid:
             for c in l:
@@ -117,11 +134,18 @@ class CardGrid():
         return notVisibleCounter
     
     def setAllCardVisible(self):
+        """Set all card in the player grid visible"""
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
                 self.grid[l][c].setVisibility(True)
     
     def getTotalValue(self) -> int:
+        """Return the total value of all card
+        Return
+        ------
+        total: int
+            the total
+        """
         total = 0
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
@@ -129,6 +153,12 @@ class CardGrid():
         return total
     
     def checkColumn(self,game):
+        """Search a column with all card with the same value
+        Parameter
+        ---------
+        game: Game
+            the game where the player is to add the card in visible pile
+        """
         for c in range(len(self.grid[0])):
             equalCounter = 0
             for l in range(1,len(self.grid)):
@@ -140,6 +170,12 @@ class CardGrid():
                 break
     
     def getVisibleCardCoo(self) -> list[list[int]]:
+        """Return a list with the coordinates of all visible card in player grid
+        Return
+        ------
+        visibleList: list[list[int]]
+            the list of coordinate
+        """
         visibleList = []
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
@@ -147,14 +183,26 @@ class CardGrid():
         return visibleList
     
     def getInvisibleCardCoo(self) -> list[list[int]]:
-        invisibleList = []
+        """Return a list with the coordinates of all invisible card in player grid
+        Return
+        ------
+        invisibleList: list[list[int]]
+            the list of coordinate
+        """
+        invisibleList: list[list[int]] = []
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
                 if not self.grid[l][c].isItVisible(): invisibleList.append([c,l])
         return invisibleList
     
     def getBiggestVisibleCardCoo(self) -> list[int]:
-        cardCoo = []
+        """Return the coordinate of the visible card with biggest value in player grid
+        Return
+        ------
+        cardCoo: list[int]
+            the coordinate of the card
+        """
+        cardCoo: list[int] = []
         x = -3
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
