@@ -3,11 +3,11 @@ from typing import List
 from humanStrat import *
 import os
 
-CARD_GRID_WIDTH = 4
-CARD_GRID_HEIGHT = 3
+CARD_GRID_WIDTH = 2
+CARD_GRID_HEIGHT = 2
 
 def clearView():
-    os.system('clear')
+    os.system('')
 
 class Card():
     def __init__(self,value):
@@ -102,7 +102,7 @@ class CardGrid():
     def getTotalCard(self) -> int:
         return len(self.grid)*len(self.grid[0])
     
-    def amountVisibleCard(self):
+    def amountVisibleCard(self) -> int:
         visibleCounter = 0
         for l in self.grid:
             for c in l:
@@ -115,6 +115,18 @@ class CardGrid():
             for c in l:
                 if not c.isItVisible(): notVisibleCounter+=1
         return notVisibleCounter == 0
+    
+    def setAllCardVisible(self):
+        for l in range(len(self.grid)):
+            for c in range(len(self.grid[l])):
+                self.grid[l][c].setVisibility(True)
+    
+    def getTotalValue(self) -> int:
+        total = 0
+        for l in range(len(self.grid)):
+            for c in range(len(self.grid[l])):
+                total += self.grid[l][c].getValue()
+        return total
     
 class Player():
     def __init__(self,name: str):
@@ -153,6 +165,9 @@ class Player():
         gridShow += "\n"+(CARD_GRID_WIDTH*4*"-")+"--"
         print(gridShow)
 
+    def getName(self):
+        return self.name
+
 class Game():
     def __init__(self,playerList: list[Player]):
         self.playerList = playerList
@@ -171,19 +186,45 @@ class Game():
     def getPlayerList(self):
         return self.playerList
     
-    def gamePlay(self):
-        inGame = True
-        while inGame:
+    def gamePlay(self) -> dict:
+        doesPlayerFinish = True
+        playerNameFinishSet = False
+        playerFinishName = ""
+        #We make play all the player, stop when player had all cards visible
+        while doesPlayerFinish:
             for player in self.playerList:
-                inGame = player.play(self)
-                if inGame == False: break
-        stat  = {}
+                doesPlayerFinish = player.play(self)
+                if doesPlayerFinish == False:
+                    if not playerNameFinishSet: 
+                        playerFinishName = player.getName()
+                        playerNameFinishSet = True
+        #make play the player a the start of the lap who dont have finished there last lap after the finish
+        for player in self.playerList:
+            if player.getName() == playerFinishName: break
+            else: player.play(self)
+        #make all the card visible after the last turn
+        for player in self.playerList:
+            player.getCards().setAllCardVisible()
+            print(player.getName() + " grid:")
+            player.printGrid()
+        #get all stat needed for the study after the game
+        statistics  = {}
+        statistics["numberOfPlayer"] = len(self.playerList)
+        statistics["score"] = {}
+        statistics["classement"] = [self.playerList[0].getName()]
+        for player in self.playerList:
+            statistics["score"][player.getName()] = player.getCards().getTotalValue()
+            for c in range(len(statistics["classement"])):
+                if statistics["score"][player.getName()] < statistics["score"][statistics["classement"][c]]:
+                    statistics["classement"].insert(c, player.getName())
         print('Game finished')
+        return statistics
 
 def main():
     players = [Human("Bob"),Human("Alice")]
     game = Game(players)
-    game.gamePlay()
+    finalStat: dict = game.gamePlay()
+    print(finalStat)
 
 if __name__ == "__main__":
     main()
