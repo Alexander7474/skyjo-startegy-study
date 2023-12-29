@@ -3,8 +3,8 @@ from typing import List
 from humanStrat import *
 import os
 
-CARD_GRID_WIDTH = 2
-CARD_GRID_HEIGHT = 2
+CARD_GRID_WIDTH = 4
+CARD_GRID_HEIGHT = 3
 
 def clearView():
     os.system('')
