@@ -11,7 +11,9 @@ class Human(Player):
     def play(self,game: Game):
         clearView()
         print(self.name)
-        if self.cards.amountVisibleCard() < 2:
+        if self.cards.isAllCardVisible():
+            return False
+        if not self.ready:
             self.printGrid()
             print("This is you first turn, you need to return two card")
             print("First card")
@@ -22,6 +24,7 @@ class Human(Player):
             y2 = int(input('y: '))
             self.cards.getCard(y1-1,x1-1).setVisibility(True)
             self.cards.getCard(y2-1,x2-1).setVisibility(True)
+            self.ready = True
             return True
         else:
             print('Last visible card pile: ' + str(game.getCardPile().showLastCardFromSecond().getValue()))
@@ -55,7 +58,8 @@ class Human(Player):
                     y = int(input('y: '))
                     game.gameCardPile.addCard(self.cards.getCard(y-1,x-1))
                     self.cards.setCard(cardInUse,y-1,x-1)
-                    return not self.cards.isAllCardVisible()
+                    self.cards.checkColumn(game)
+                    return True
                 elif rep == "2":
                     clearView()
                     print(self.name)
@@ -66,7 +70,8 @@ class Human(Player):
                     y = int(input('y: '))
                     self.cards.getCard(y-1,x-1).setVisibility(True)
                     game.gameCardPile.addCard(cardInUse)
-                    return not self.cards.isAllCardVisible()
+                    self.cards.checkColumn(game)
+                    return True
             elif rep == "2":
                 clearView()
                 print(self.name)
@@ -79,7 +84,8 @@ class Human(Player):
                 y = int(input('y: '))
                 game.gameCardPile.addCard(self.cards.getCard(y-1,x-1))
                 self.cards.setCard(cardInUse,y-1,x-1)
-                return not self.cards.isAllCardVisible()
+                self.cards.checkColumn(game)
+                return True
             elif rep == "3":
                 clearView()
                 print('My final message: good bye !')

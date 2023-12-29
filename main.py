@@ -3,8 +3,8 @@ from typing import List
 from humanStrat import *
 import os
 
-CARD_GRID_WIDTH = 4
-CARD_GRID_HEIGHT = 3
+CARD_GRID_WIDTH = 2
+CARD_GRID_HEIGHT = 2
 
 def clearView():
     os.system('')
@@ -128,10 +128,22 @@ class CardGrid():
                 total += self.grid[l][c].getValue()
         return total
     
+    def checkColumn(self,game):
+        for c in range(len(self.grid[0])):
+            equalCounter = 0
+            for l in range(1,len(self.grid)):
+                if self.grid[l][c].getValue() == self.grid[l-1][c].getValue():
+                    equalCounter += 1
+            if equalCounter == CARD_GRID_HEIGHT-1:
+                for l in range(len(self.grid)):
+                    game.getCardPile().addCard(self.grid[l].pop(c))
+                break
+    
 class Player():
     def __init__(self,name: str):
         self.name = name
         self.cards = CardGrid()
+        self.ready = False
 
     def addCard(self,card):
         find = False
@@ -188,20 +200,11 @@ class Game():
     
     def gamePlay(self) -> dict:
         doesPlayerFinish = True
-        playerNameFinishSet = False
-        playerFinishName = ""
-        #We make play all the player, stop when player had all cards visible
+        #We make play all the player, stop when a player had all cards visible
         while doesPlayerFinish:
             for player in self.playerList:
                 doesPlayerFinish = player.play(self)
-                if doesPlayerFinish == False:
-                    if not playerNameFinishSet: 
-                        playerFinishName = player.getName()
-                        playerNameFinishSet = True
-        #make play the player a the start of the lap who dont have finished there last lap after the finish
-        for player in self.playerList:
-            if player.getName() == playerFinishName: break
-            else: player.play(self)
+                if doesPlayerFinish == False: break
         #make all the card visible after the last turn
         for player in self.playerList:
             player.getCards().setAllCardVisible()
@@ -217,6 +220,7 @@ class Game():
             for c in range(len(statistics["classement"])):
                 if statistics["score"][player.getName()] < statistics["score"][statistics["classement"][c]]:
                     statistics["classement"].insert(c, player.getName())
+            if player.getName() not in statistics["classement"]: statistics["classement"].append(player.getName())
         print('Game finished')
         return statistics
 
