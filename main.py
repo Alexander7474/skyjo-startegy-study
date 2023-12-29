@@ -10,7 +10,7 @@ def clearView():
     os.system('')
 
 class Card():
-    def __init__(self,value):
+    def __init__(self,value: int):
         self.isVisible = False
         self.value = value
 
@@ -96,7 +96,7 @@ class CardGrid():
     def getCard(self,lineIndex: int,cardIndex: int) -> Card:
         return self.grid[lineIndex][cardIndex]
     
-    def setCard(self,card,lineIndex,cardIndex):
+    def setCard(self,card,lineIndex: int,cardIndex: int):
         self.grid[lineIndex][cardIndex] = card
 
     def getTotalCard(self) -> int:
@@ -143,15 +143,25 @@ class CardGrid():
         visibleList = []
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
-                if c.isItVisible(): visibleList.append([c,l])
+                if self.grid[l][c].isItVisible(): visibleList.append([c,l])
         return visibleList
     
     def getInvisibleCardCoo(self) -> list[list[int]]:
         invisibleList = []
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
-                if not c.isItVisible(): invisibleList.append([c,l])
+                if not self.grid[l][c].isItVisible(): invisibleList.append([c,l])
         return invisibleList
+    
+    def getBiggestVisibleCardCoo(self) -> list[int]:
+        cardCoo = []
+        x = -3
+        for l in range(len(self.grid)):
+            for c in range(len(self.grid[l])):
+                if x < self.grid[l][c].getValue() and self.grid[l][c].isItVisible(): 
+                    x = self.grid[l][c].getValue()
+                    cardCoo = [c,l]
+        return cardCoo
     
 class Player():
     def __init__(self,name: str):
