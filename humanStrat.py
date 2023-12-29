@@ -11,7 +11,7 @@ class Human(Player):
     def play(self,game: Game):
         clearView()
         print(self.name)
-        if self.cards.isAllCardVisible():
+        if self.cards.amountNotVisibleCard() == 0:
             return False
         if not self.ready:
             self.printGrid()

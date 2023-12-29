@@ -109,12 +109,12 @@ class CardGrid():
                 if c.isItVisible(): visibleCounter+=1
         return visibleCounter
     
-    def isAllCardVisible(self):
+    def amountNotVisibleCard(self):
         notVisibleCounter = 0
         for l in self.grid:
             for c in l:
                 if not c.isItVisible(): notVisibleCounter+=1
-        return notVisibleCounter == 0
+        return notVisibleCounter
     
     def setAllCardVisible(self):
         for l in range(len(self.grid)):
@@ -138,6 +138,20 @@ class CardGrid():
                 for l in range(len(self.grid)):
                     game.getCardPile().addCard(self.grid[l].pop(c))
                 break
+    
+    def getVisibleCardCoo(self) -> list[list[int]]:
+        visibleList = []
+        for l in range(len(self.grid)):
+            for c in range(len(self.grid[l])):
+                if c.isItVisible(): visibleList.append([c,l])
+        return visibleList
+    
+    def getInvisibleCardCoo(self) -> list[list[int]]:
+        invisibleList = []
+        for l in range(len(self.grid)):
+            for c in range(len(self.grid[l])):
+                if not c.isItVisible(): invisibleList.append([c,l])
+        return invisibleList
     
 class Player():
     def __init__(self,name: str):
