@@ -1,6 +1,8 @@
-#HUMAN STARTEGY
+"""
+HUMAN STARTEGY
 
-#This is the most simple startegy, like all the strategy, the class is a kid of class player and the play function is decided by player.
+This is the most simple startegy, like all the strategy, the class is a kid of class player and the play function is decided by player.
+"""
 
 from main import Player,Game,Card,clearView
 
