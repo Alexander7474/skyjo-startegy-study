@@ -1,5 +1,7 @@
 from player import Player
 from card import CardPile,CARD_GRID_WIDTH,CARD_GRID_HEIGHT
+from uiFonction import sortClassment
+import random
 
 class Game():
     def __init__(self,playerList: list[Player]):
@@ -12,7 +14,6 @@ class Game():
                 player.addCard(self.gameCardPile.pickLastCardFromSecond())
         self.gameCardPile.remakePile()
         self.gameCardPile.outCard()
-
     def getCardPile(self):
         return self.gameCardPile
     
@@ -29,18 +30,16 @@ class Game():
         #make all the card visible after the last turn
         for player in self.playerList:
             player.getCards().setAllCardVisible()
-            print(player.getName() + " grid:")
-            player.printGrid()
+            #print(player.getName() + " grid:")
+            #player.printGrid()
         #get all stat needed for the study after the game
         statistics  = {}
         statistics["numberOfPlayer"] = len(self.playerList)
         statistics["score"] = {}
-        statistics["classement"] = [self.playerList[0].getName()]
+        statistics["classement"] = []
         for player in self.playerList:
             statistics["score"][player.getName()] = player.getCards().getTotalValue()
-            for c in range(len(statistics["classement"])):
-                if statistics["score"][player.getName()] < statistics["score"][statistics["classement"][c]]:
-                    statistics["classement"].insert(c, player.getName())
-            if player.getName() not in statistics["classement"]: statistics["classement"].append(player.getName())
-        print('Game finished')
+            statistics["classement"].append(player.getName())
+        statistics["classement"] = sortClassment(statistics["classement"],statistics["score"])
+        #print('Game finished')
         return statistics

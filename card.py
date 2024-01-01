@@ -186,7 +186,7 @@ class CardGrid():
         visibleList = []
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
-                if self.grid[l][c].isItVisible(): visibleList.append([c,l])
+                if self.grid[l][c].isItVisible(): visibleList.append([l,c])
         return visibleList
     
     def getInvisibleCardCoo(self) -> list[list[int]]:
@@ -201,52 +201,52 @@ class CardGrid():
         invisibleList: list[list[int]] = []
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
-                if not self.grid[l][c].isItVisible(): invisibleList.append([c,l])
+                if not self.grid[l][c].isItVisible(): invisibleList.append([l,c])
         return invisibleList
     
-    def getBiggestVisibleCardCoo(self) -> list[int]:
+    def getBiggestVisibleCard(self) -> list[int]:
         """
         Return the coordinate of the visible card with biggest value in player grid
         
         Return
         ------
-        cardCoo: list[int]
-            the coordinate of the card
+        cardCoo: list[int,list[int]]
+            the value and the coordinate of the card
         """
-        cardCoo: list[int] = []
-        x = -3
+        card: list[int,list[int]] = [-3,[]]
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
-                if x < self.grid[l][c].getValue() and self.grid[l][c].isItVisible(): 
-                    x = self.grid[l][c].getValue()
-                    cardCoo = [c,l]
-        return cardCoo
+                if card[0] < self.grid[l][c].getValue() and self.grid[l][c].isItVisible(): 
+                    card[0] = self.grid[l][c].getValue()
+                    card[1] = [l,c]
+        if card[0] > -3: return card
+        else: return None
     
-    def getSmallestVisibleCardCoo(self) -> list[int]:
+    def getSmallestVisibleCard(self) -> list[int]:
         """
         Return the coordinate of the visible card with smallest value in player grid
         
         Return
         ------
-        cardCoo: list[int]
-            the coordinate of the card
+        cardCoo: list[int,list[int]]
+            the value and the coordinate of the card
         """
-        cardCoo: list[int] = []
-        x = 13
+        card: list[int,list[int]] = [13,[]]
         for l in range(len(self.grid)):
             for c in range(len(self.grid[l])):
-                if x > self.grid[l][c].getValue() and self.grid[l][c].isItVisible(): 
-                    x = self.grid[l][c].getValue()
-                    cardCoo = [c,l]
-        return cardCoo
+                if card[0] > self.grid[l][c].getValue() and self.grid[l][c].isItVisible(): 
+                    card[0] = self.grid[l][c].getValue()
+                    card[1] = [c,l]
+        if card[0] < 13: return card
+        else: return None
     
     def randomInitGrid(self):
         """
         Set 2 random card visible in the grid, not in the same column
         """
         x1 = random.randint(0,1)
-        y1 = random.randint(0,3)
+        y1 = random.randint(0,2)
         x2 = random.randint(2,3)
-        y2 = random.randint(0,3)
-        self.grid[y1,x1].setVisibility(True)
-        self.grid[y2,x2].setVisibility(True)
+        y2 = random.randint(0,2)
+        self.grid[y1][x1].setVisibility(True)
+        self.grid[y2][x2].setVisibility(True)
