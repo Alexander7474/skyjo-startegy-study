@@ -1,7 +1,7 @@
 # Skyjo study project
 
 The goal of this project is to study the best strategy to win in the game named 'Skyjo', for that we are going to remake the game in python and build strategy to make them play together. You can participate to the project by helping us to find new strategy and run them on your own computer. <br/>
-At this time the game is not finished and the way to write strategy is not set so the project is at his beginning. <br/>
+At this time the game is finished and the way to write strategy is ready !. <br/>
 
 ## Installation
 
